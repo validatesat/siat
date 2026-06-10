@@ -1,0 +1,653 @@
+<html lang="es"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sorteo Copa del Mundo 2026</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Segoe UI',Arial,sans-serif;background:#07111f;color:#fff;min-height:100vh;padding-bottom:60px;overflow-x:hidden;}
+    @keyframes loadSpin   {from{transform:rotate(0)}to{transform:rotate(360deg)}}
+    @keyframes drumSpin   {from{transform:rotate(0)}to{transform:rotate(360deg)}}
+    @keyframes orbit      {from{transform:translate(-50%,-50%) rotate(0deg) translateY(-44px)}to{transform:translate(-50%,-50%) rotate(360deg) translateY(-44px)}}
+    @keyframes ballBounce {from{transform:scale(1)}to{transform:scale(1.18)}}
+    @keyframes fadeUp     {from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes slideIn    {from{opacity:0;transform:translateX(-24px)}to{opacity:1;transform:translateX(0)}}
+    @keyframes shimmer    {0%{background-position:0% 50%}100%{background-position:200% 50%}}
+    @keyframes starFloat  {0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-9px) rotate(6deg)}}
+    @keyframes glowPulse  {0%,100%{box-shadow:0 0 0 0 rgba(200,168,75,0)}50%{box-shadow:0 0 28px 6px rgba(200,168,75,0.3)}}
+    @keyframes popIn      {0%{transform:scale(0.3);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+    @keyframes flipIn     {from{transform:rotateY(180deg)}to{transform:rotateY(0deg)}}
+
+    input:focus{outline:none;border-color:#c8a84b!important;box-shadow:0 0 0 3px rgba(200,168,75,0.2);}
+    button:disabled{opacity:0.45;cursor:not-allowed;}
+    ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:#c8a84b44;border-radius:2px}
+
+    #loading{position:fixed;inset:0;background:#07111f;display:flex;align-items:center;justify-content:center;z-index:1000;flex-direction:column;gap:14px;}
+    #loading .ball{font-size:52px;animation:loadSpin 1s linear infinite;display:inline-block;}
+    #loading p{color:#c8a84b;font-size:16px;font-weight:700;letter-spacing:2px;}
+
+    .header{background:linear-gradient(135deg,#0b1e45,#1a3a7a,#0b1e45);padding:26px 20px 18px;text-align:center;border-bottom:3px solid #c8a84b;position:relative;overflow:hidden;}
+    .header h1{font-size:21px;font-weight:900;letter-spacing:3px;text-transform:uppercase;background:linear-gradient(90deg,#c8a84b,#f8e080,#c8a84b);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 3s linear infinite;margin:4px 0;}
+    .header p{font-size:11px;color:#7a9cc0;margin-bottom:14px;}
+    .star{position:absolute;color:#c8a84b33;pointer-events:none;}
+
+    .progress-wrap{max-width:300px;margin:0 auto;}
+    .progress-label{display:flex;justify-content:space-between;font-size:11px;color:#5a7a9a;margin-bottom:5px;}
+    .progress-bar{background:#071528;border-radius:20px;height:10px;overflow:hidden;}
+    .progress-fill{height:100%;background:linear-gradient(90deg,#c8a84b,#f0d080);border-radius:20px;transition:width 0.7s ease;box-shadow:0 0 10px #c8a84b88;}
+
+    .container{max-width:600px;margin:0 auto;padding:22px 14px;}
+
+    .card{background:#0c1e38;border-radius:14px;padding:20px;border:1px solid #1e3a6e;margin-bottom:24px;}
+    .card h2{font-size:16px;color:#c8a84b;text-align:center;margin-bottom:6px;}
+    .card p{font-size:12px;color:#5a7a9a;text-align:center;margin-bottom:16px;line-height:1.6;}
+
+    .input-row{display:flex;gap:10px;margin-bottom:8px;}
+    .input-row input{flex:1;background:#071528;border:2px solid #1e3a6e;border-radius:10px;padding:11px 14px;color:#fff;font-size:15px;transition:border 0.2s;}
+    .sortear-btn{background:linear-gradient(135deg,#c8a84b,#f0d080);color:#000;border:none;border-radius:10px;padding:11px 20px;font-weight:900;font-size:14px;cursor:pointer;transition:all 0.2s;white-space:nowrap;animation:glowPulse 2s infinite;}
+    .sortear-btn:hover:not(:disabled){filter:brightness(1.15);transform:scale(1.04);}
+    .err{font-size:12px;color:#e74c3c;font-weight:700;margin-top:4px;}
+
+    .bombo-wrap{text-align:center;margin-bottom:18px;}
+    .bombo{position:relative;width:130px;height:130px;margin:0 auto;}
+    .bombo-ring{position:absolute;inset:0;border-radius:50%;border:4px solid #c8a84b;background:radial-gradient(circle at 38% 30%,#1e4080,#07111f);transition:box-shadow 0.4s;}
+    .bombo-ring.spinning{animation:drumSpin 1.2s linear infinite;box-shadow:0 0 30px #c8a84b88;}
+    .bombo-ring.idle{box-shadow:0 0 10px #c8a84b33;}
+    .bombo-emoji{position:absolute;font-size:20px;top:50%;left:50%;}
+    .bombo-emoji.spinning{animation:orbit 1.2s linear infinite;}
+    .bombo-center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:42px;}
+    .bombo-center.spinning{animation:ballBounce 0.5s ease-in-out infinite alternate;}
+    .spinning-text{font-size:16px;font-weight:800;color:#c8a84b;letter-spacing:1px;}
+    .spinning-sub{font-size:12px;color:#5a7a9a;margin-top:4px;}
+
+    .my-groups-card{border-radius:14px;padding:18px;margin-bottom:22px;animation:fadeUp 0.4s ease;}
+    .my-groups-label{font-size:12px;color:#c8a84b;font-weight:800;margin-bottom:8px;letter-spacing:1px;}
+    .my-groups-name{font-weight:900;font-size:18px;margin-bottom:14px;}
+    .group-cards-row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;}
+    .group-big-card{border-radius:12px;padding:14px 26px;text-align:center;}
+    .group-big-card .letter{font-size:30px;font-weight:900;letter-spacing:2px;}
+    .group-big-card .divider{width:100%;height:1px;margin:8px 0;}
+    .group-big-card .teams{font-size:9.5px;color:#ffffffcc;line-height:1.7;}
+
+    .reveal-section{text-align:center;margin-bottom:24px;animation:fadeUp 0.5s ease;}
+    .reveal-label{font-size:13px;font-weight:800;color:#c8a84b;letter-spacing:1px;margin-bottom:6px;}
+    .reveal-name{font-size:17px;font-weight:700;margin-bottom:20px;}
+    .flip-cards-row{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;}
+    .flip-card{perspective:700px;width:138px;height:165px;}
+    .flip-card-inner{position:relative;width:100%;height:100%;transition:transform 0.75s cubic-bezier(0.4,0,0.2,1);transform-style:preserve-3d;}
+    .flip-card-inner.flipped{transform:rotateY(0deg);}
+    .flip-card-inner.hidden{transform:rotateY(180deg);}
+    .flip-front,.flip-back{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+    .flip-front .big-letter{font-size:44px;font-weight:900;color:#fff;letter-spacing:2px;}
+    .flip-front .divider{width:80%;height:1px;margin:8px 0;}
+    .flip-front .team-list{font-size:9.5px;color:#ffffffcc;text-align:center;line-height:1.7;padding:0 10px;}
+    .flip-back{background:linear-gradient(145deg,#0d2040,#162d54);border:2px solid #1e3a6e;gap:8px;}
+    .flip-back .q{font-size:44px;color:#1e3a6e;}
+    .reveal-done{margin-top:16px;font-size:13px;color:#3aae80;font-weight:800;animation:popIn 0.5s ease;}
+
+    .done-banner{background:linear-gradient(135deg,#0b4d1f,#1a7a38);border-radius:12px;padding:16px;text-align:center;margin-bottom:20px;border:2px solid #2ecc71;animation:popIn 0.5s ease;}
+    .done-banner .trophy{font-size:34px;}
+    .done-banner .title{font-size:17px;font-weight:900;color:#2ecc71;}
+    .done-banner .sub{font-size:12px;color:#a8f0c0;margin-top:4px;}
+
+    .locked-card{background:#0c1e38;border-radius:14px;padding:20px;text-align:center;margin-bottom:24px;border:1px solid #2a4070;animation:fadeUp 0.5s ease;}
+
+    .section-title{color:#c8a84b;font-size:13px;font-weight:800;letter-spacing:1px;margin-bottom:12px;}
+    .participants-list{display:flex;flex-direction:column;gap:9px;margin-bottom:22px;}
+    .participant-row{border-radius:10px;padding:11px 14px;display:flex;align-items:center;gap:12px;animation:slideIn 0.4s ease;}
+    .participant-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0;}
+    .participant-info{flex:1;}
+    .participant-name{font-weight:800;font-size:14px;}
+    .participant-sub{font-size:11px;color:#4a6a8a;margin-top:2px;}
+    .participant-tags{display:flex;gap:6px;}
+    .group-tag{border-radius:7px;padding:5px 11px;font-weight:900;font-size:17px;}
+    .empty-row{background:#0c1e38;border-radius:10px;border:1px dashed #1a3060;padding:11px 14px;display:flex;align-items:center;gap:12px;opacity:0.35;}
+    .empty-avatar{width:38px;height:38px;border-radius:50%;background:#0d2040;border:2px dashed #1e3a6e;display:flex;align-items:center;justify-content:center;color:#1e3a6e;font-size:14px;}
+
+    .groups-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:9px;margin-bottom:28px;}
+    .group-cell{border-radius:10px;overflow:hidden;}
+    .group-cell-header{padding:7px 10px;display:flex;justify-content:space-between;align-items:center;}
+    .group-cell-header .gletter{font-weight:900;font-size:14px;}
+    .group-cell-header .gowner{font-size:9px;color:#ffffffaa;max-width:72px;text-align:right;line-height:1.3;}
+    .group-cell-body{padding:7px 10px;}
+    .group-cell-team{font-size:10px;padding:2px 0;color:#b0c8e8;border-bottom:1px solid #0f2440;}
+    .group-cell-team:last-child{border-bottom:none;}
+
+    .reset-btn{background:transparent;border:1px solid #1a2a45;border-radius:8px;color:#1e3a60;padding:8px 18px;font-size:11px;cursor:pointer;display:block;margin:0 auto;}
+
+    canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;}
+  </style>
+</head>
+<body>
+
+<canvas id="confetti-canvas" style="display:none"></canvas>
+<div id="loading" style="display: none;"><div class="ball">⚽</div><p>CARGANDO...</p></div>
+<div id="app" style="display: block;">
+  <div class="header">
+    <span class="star" style="top:15%;left:4%;font-size:11px;animation:starFloat 2s ease-in-out infinite">★</span>
+    <span class="star" style="top:28%;left:22%;font-size:7px;animation:starFloat 2.4s ease-in-out infinite 0.35s">✦</span>
+    <span class="star" style="top:41%;left:40%;font-size:11px;animation:starFloat 2.8s ease-in-out infinite 0.7s">★</span>
+    <span class="star" style="top:54%;left:58%;font-size:7px;animation:starFloat 3.2s ease-in-out infinite 1.05s">✦</span>
+    <span class="star" style="top:67%;left:76%;font-size:11px;animation:starFloat 3.6s ease-in-out infinite 1.4s">★</span>
+    <div style="font-size:46px;margin-bottom:2px">🏆</div>
+    <h1>Copa del Mundo 2026</h1>
+    <p>Sorteo de grupos · EE.UU. · México · Canadá</p>
+    <div class="progress-wrap">
+      <div class="progress-label"><span>Participantes registrados</span><span style="font-weight:700;color:#c8a84b">5 / 6</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:83.33333333333334%"></div></div>
+    </div>
+  </div>
+  <div class="container"><div class="bombo-wrap" style="animation:fadeUp 0.5s ease">
+      <div class="bombo">
+        <div class="bombo-ring idle"></div>
+        <div class="bombo-emoji " style="transform:translate(-50%,-50%) rotate(0deg) translateY(-44px)">🇦🇷</div><div class="bombo-emoji " style="transform:translate(-50%,-50%) rotate(60deg) translateY(-44px)">🇧🇷</div><div class="bombo-emoji " style="transform:translate(-50%,-50%) rotate(120deg) translateY(-44px)">🇫🇷</div><div class="bombo-emoji " style="transform:translate(-50%,-50%) rotate(180deg) translateY(-44px)">🇩🇪</div><div class="bombo-emoji " style="transform:translate(-50%,-50%) rotate(240deg) translateY(-44px)">🇪🇸</div><div class="bombo-emoji " style="transform:translate(-50%,-50%) rotate(300deg) translateY(-44px)">⚽</div>
+        <div class="bombo-center ">🏆</div>
+      </div>
+    </div><div class="card">
+        <h2>👤 Regístrate para participar</h2>
+        <p>Escribe tu nombre y pica el botón.<br>El bombo te asignará <b style="color:#c8a84b">2 grupos</b> al azar.
+        <br><span style="color:#f0d080">Quedan 1 lugar(es)</span></p>
+        <div class="input-row">
+          <input id="name-input" type="text" placeholder="Tu nombre..." maxlength="25" data-manus_clickable="true" data-manus_click_id="1">
+          <button class="sortear-btn" id="sortear-btn" data-manus_clickable="true" data-manus_click_id="2">🎰 ¡Sortear!</button>
+        </div>
+        <div class="err" id="err-msg"></div>
+      </div><div class="section-title">PARTICIPANTES (5/6)</div>
+  <div class="participants-list"><div class="participant-row" style="background:#1a3a8f22;border:1px solid #6080df;box-shadow:none">
+      <div class="participant-avatar" style="background:#1a3a8f;border:2px solid #6080df;box-shadow:0 0 8px #3060ff44">1</div>
+      <div class="participant-info">
+        <div class="participant-name">Jonatan</div>
+        <div class="participant-sub">Grupos A y C</div>
+      </div>
+      <div class="participant-tags">
+        <div class="group-tag" style="background:#1a3a8f;border:1px solid #6080df;box-shadow:0 0 8px #3060ff33">A</div><div class="group-tag" style="background:#1a3a8f;border:1px solid #6080df;box-shadow:0 0 8px #3060ff33">C</div>
+      </div>
+    </div><div class="participant-row" style="background:#7b2d8b22;border:1px solid #c06dd0;box-shadow:none">
+      <div class="participant-avatar" style="background:#7b2d8b;border:2px solid #c06dd0;box-shadow:0 0 8px #b040e044">2</div>
+      <div class="participant-info">
+        <div class="participant-name">Rosalía</div>
+        <div class="participant-sub">Grupos G y H</div>
+      </div>
+      <div class="participant-tags">
+        <div class="group-tag" style="background:#7b2d8b;border:1px solid #c06dd0;box-shadow:0 0 8px #b040e033">G</div><div class="group-tag" style="background:#7b2d8b;border:1px solid #c06dd0;box-shadow:0 0 8px #b040e033">H</div>
+      </div>
+    </div><div class="participant-row" style="background:#9b1a1a22;border:1px solid #d06060;box-shadow:none">
+      <div class="participant-avatar" style="background:#9b1a1a;border:2px solid #d06060;box-shadow:0 0 8px #ff303044">3</div>
+      <div class="participant-info">
+        <div class="participant-name">EVA Y.</div>
+        <div class="participant-sub">Grupos B y F</div>
+      </div>
+      <div class="participant-tags">
+        <div class="group-tag" style="background:#9b1a1a;border:1px solid #d06060;box-shadow:0 0 8px #ff303033">B</div><div class="group-tag" style="background:#9b1a1a;border:1px solid #d06060;box-shadow:0 0 8px #ff303033">F</div>
+      </div>
+    </div><div class="participant-row" style="background:#0b6e4f22;border:1px solid #3aae80;box-shadow:none">
+      <div class="participant-avatar" style="background:#0b6e4f;border:2px solid #3aae80;box-shadow:0 0 8px #00dd8844">4</div>
+      <div class="participant-info">
+        <div class="participant-name">Ambrosio</div>
+        <div class="participant-sub">Grupos D y K</div>
+      </div>
+      <div class="participant-tags">
+        <div class="group-tag" style="background:#0b6e4f;border:1px solid #3aae80;box-shadow:0 0 8px #00dd8833">D</div><div class="group-tag" style="background:#0b6e4f;border:1px solid #3aae80;box-shadow:0 0 8px #00dd8833">K</div>
+      </div>
+    </div><div class="participant-row" style="background:#8a4a0022;border:1px solid #d08030;box-shadow:none">
+      <div class="participant-avatar" style="background:#8a4a00;border:2px solid #d08030;box-shadow:0 0 8px #ff990044">5</div>
+      <div class="participant-info">
+        <div class="participant-name">Christopher</div>
+        <div class="participant-sub">Grupos I y L</div>
+      </div>
+      <div class="participant-tags">
+        <div class="group-tag" style="background:#8a4a00;border:1px solid #d08030;box-shadow:0 0 8px #ff990033">I</div><div class="group-tag" style="background:#8a4a00;border:1px solid #d08030;box-shadow:0 0 8px #ff990033">L</div>
+      </div>
+    </div><div class="empty-row"><div class="empty-avatar">6</div>
+      <div style="font-size:12px;color:#1a3060">Esperando participante...</div></div></div><div class="section-title">GRUPOS ASIGNADOS</div><div class="groups-grid"><div class="group-cell" style="background:#1a3a8f22;border:1px solid #6080df;box-shadow:none">
+        <div class="group-cell-header" style="background:#1a3a8f">
+          <span class="gletter">GRUPO A</span>
+          <span class="gowner">Jonatan</span>
+        </div>
+        <div class="group-cell-body">
+          <div class="group-cell-team">🇲🇽 México</div><div class="group-cell-team">🇿🇦 Sudáfrica</div><div class="group-cell-team">🇩🇪 Alemania</div><div class="group-cell-team">🇨🇮 Costa de Marfil</div>
+        </div>
+      </div><div class="group-cell" style="background:#9b1a1a22;border:1px solid #d06060;box-shadow:none">
+        <div class="group-cell-header" style="background:#9b1a1a">
+          <span class="gletter">GRUPO B</span>
+          <span class="gowner">EVA Y.</span>
+        </div>
+        <div class="group-cell-body">
+          <div class="group-cell-team">🇺🇸 Estados Unidos</div><div class="group-cell-team">🇸🇳 Senegal</div><div class="group-cell-team">🇺🇾 Uruguay</div><div class="group-cell-team">🇨🇼 Curazao</div>
+        </div>
+      </div><div class="group-cell" style="background:#1a3a8f22;border:1px solid #6080df;box-shadow:none">
+        <div class="group-cell-header" style="background:#1a3a8f">
+          <span class="gletter">GRUPO C</span>
+          <span class="gowner">Jonatan</span>
+        </div>
+        <div class="group-cell-body">
+          <div class="group-cell-team">🇨🇦 Canadá</div><div class="group-cell-team">🇭🇷 Croacia</div><div class="group-cell-team">🇲🇦 Marruecos</div><div class="group-cell-team">🇧🇪 Bélgica</div>
+        </div>
+      </div><div class="group-cell" style="background:#0b6e4f22;border:1px solid #3aae80;box-shadow:none">
+        <div class="group-cell-header" style="background:#0b6e4f">
+          <span class="gletter">GRUPO D</span>
+          <span class="gowner">Ambrosio</span>
+        </div>
+        <div class="group-cell-body">
+          <div class="group-cell-team">🇦🇷 Argentina</div><div class="group-cell-team">🇵🇹 Portugal</div><div class="group-cell-team">🇳🇬 Nigeria</div><div class="group-cell-team">🇺🇿 Uzbekistán</div>
+        </div>
+      </div><div class="group-cell" style="background:#0c1e38;border:1px solid #1a3460;box-shadow:none">
+        <div class="group-cell-header" style="background:#0d2b5e">
+          <span class="gletter">GRUPO E</span>
+          <span class="gowner">—</span>
+        </div>
+        <div class="group-cell-body">
+          <div class="group-cell-team">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra</div><div class="group-cell-team">🇨🇴 Colombia</div><div class="group-cell-team">🇪🇬 Egipto</div><div class="group-cell-team">🇯🇴 Jordania</div>
+        </div>
+      </div><div class="group-cell" style="background:#9b1a1a22;border:1px solid #d06060;box-shadow:none">
+        <div class="group-cell-header" style="background:#9b1a1a">
+          <span class="gletter">GRUPO F</span>
+          <span class="gowner">EVA Y.</span>
+        </div>
+        <div class="group-cell-body">
+          <div class="group-cell-team">🇧🇷 Brasil</div><div class="group-cell-team">🇨🇭 Suiza</div><div class="group-cell-team">🇯🇵 Japón</div><div class="group-cell-team">🇹🇳 Túnez</div>
+        </div>
+      </div><div class="group-cell" style="background:#7b2d8b22;border:1px solid #c06dd0;box-shadow:none">
+        <div class="group-cell-header" style="background:#7b2d8b">
+          <span class="gletter">GRUPO G</span>
+          <span class="gowner">Rosalía</span>
+        </div>
+        <div class="group-cell-body">
+          <div class="group-cell-team">🇫🇷 Francia</div><div class="group-cell-team">🇳🇱 Países Bajos</div><div class="group-cell-team">🇪🇨 Ecuador</div><div class="group-cell-team">🇮🇶 Irak</div>
+        </div>
+      </div><div class="group-cell" style="background:#7b2d8b22;border:1px solid #c06dd0;box-shadow:none">
+        <div class="group-cell-header" style="background:#7b2d8b">
+          <span class="gletter">GRUPO H</span>
+          <span class="gowner">Rosalía</span>
+        </div>
+        <div class="group-cell-body">
+          <div class="group-cell-team">🇪🇸 España</div><div class="group-cell-team">🇰🇷 Corea del Sur</div><div class="group-cell-team">🇵🇾 Paraguay</div><div class="group-cell-team">🇩🇿 Argelia</div>
+        </div>
+      </div><div class="group-cell" style="background:#8a4a0022;border:1px solid #d08030;box-shadow:none">
+        <div class="group-cell-header" style="background:#8a4a00">
+          <span class="gletter">GRUPO I</span>
+          <span class="gowner">Christopher</span>
+        </div>
+        <div class="group-cell-body">
+          <div class="group-cell-team">🇸🇪 Suecia</div><div class="group-cell-team">🇹🇷 Turquía</div><div class="group-cell-team">🇬🇭 Ghana</div><div class="group-cell-team">🇵🇦 Panamá</div>
+        </div>
+      </div><div class="group-cell" style="background:#0c1e38;border:1px solid #1a3460;box-shadow:none">
+        <div class="group-cell-header" style="background:#0d2b5e">
+          <span class="gletter">GRUPO J</span>
+          <span class="gowner">—</span>
+        </div>
+        <div class="group-cell-body">
+          <div class="group-cell-team">🇦🇹 Austria</div><div class="group-cell-team">🇦🇺 Australia</div><div class="group-cell-team">🇨🇻 Cabo Verde</div><div class="group-cell-team">🇶🇦 Catar</div>
+        </div>
+      </div><div class="group-cell" style="background:#0b6e4f22;border:1px solid #3aae80;box-shadow:none">
+        <div class="group-cell-header" style="background:#0b6e4f">
+          <span class="gletter">GRUPO K</span>
+          <span class="gowner">Ambrosio</span>
+        </div>
+        <div class="group-cell-body">
+          <div class="group-cell-team">🇳🇴 Noruega</div><div class="group-cell-team">🇮🇷 Irán</div><div class="group-cell-team">🇨🇩 RD del Congo</div><div class="group-cell-team">🇭🇹 Haití</div>
+        </div>
+      </div><div class="group-cell" style="background:#8a4a0022;border:1px solid #d08030;box-shadow:none">
+        <div class="group-cell-header" style="background:#8a4a00">
+          <span class="gletter">GRUPO L</span>
+          <span class="gowner">Christopher</span>
+        </div>
+        <div class="group-cell-body">
+          <div class="group-cell-team">🏴󠁧󠁢󠁳󠁣󠁴󠁿 Escocia</div><div class="group-cell-team">🇸🇦 Arabia Saudita</div><div class="group-cell-team">🇷🇸 Serbia</div><div class="group-cell-team">🇳🇿 Nueva Zelanda</div>
+        </div>
+      </div></div><button class="reset-btn" id="reset-btn" data-manus_clickable="true" data-manus_click_id="3">🔄 Reiniciar sorteo (admin)</button></div></div>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, onValue, set, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+// ── TUS DATOS DE FIREBASE ──────────────────────────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyDTf2LCHpgwC7XzeaA8CtaDTH4-2gHygOQ",
+  authDomain: "mundial-villa-geranios.firebaseapp.com",
+  databaseURL: "https://mundial-villa-geranios-default-rtdb.firebaseio.com",
+  projectId: "mundial-villa-geranios",
+  storageBucket: "mundial-villa-geranios.firebasestorage.app",
+  messagingSenderId: "102047345077",
+  appId: "1:102047345077:web:7954b27c3ac45ca88711fc"
+};
+// ──────────────────────────────────────────────────────────────────────────
+
+const GRUPOS = ["A","B","C","D","E","F","G","H","I","J","K","L"];
+const MAX = 6;
+const DB_PATH = "mundial2026";
+const LOCAL_KEY = "mundial2026-myname";
+
+const EQUIPOS = {
+  A:["🇲🇽 México","🇿🇦 Sudáfrica","🇰🇷 Corea","🇨🇿 Cheguía"],
+  B:["🇨🇦 Canadá","🇧🇦 Bosnia","🇶🇦 Qatar","🇨🇭 Suiza"],
+  C:["🇧🇷 Brasil","🇲🇦 Marruecos","🇭🇹 Haití","🏴󠁧󠁢󠁳󠁣󠁴󠁿 Escocia"],
+  D:["🇺🇸 EE.UU.","🇵🇾 Paraguay","🇦🇺 Australia","🇹🇷 Turquía"],
+  E:["🇩🇪 Alemania","🇨🇼 Curazao","🇨🇮 C. de Marfil","🇪🇨 Ecuador"],
+  F:["🇳🇱 Países Bajos","🇯🇵 Japón","🇸🇪 Suecia","🇹🇳 Túnez"],
+  G:["🇧🇪 Bélgica","🇪🇬 Egipto","🇮🇷 Irán","🇳🇿 Nueva Zelanda"],
+  H:["🇪🇸 España","🇨🇻 Cabo Verde","🇸🇦 Arabia Saudita","🇺🇾 Uruguay"],
+  I:["🇫🇷 Francia","🇸🇳 Senegal","🇮🇶 Irak","🇳🇴 Noruega"],
+  J:["🇦🇷 Argentina","🇩🇿 Argelia","🇺🇿 Uzbekistán","🇯🇴 Jordania"],
+  K:["🇵🇹 Portugal","🇨🇩 RD Congo","🇺🇿 Uzbekistán","🇨🇴 Colombia"],
+  L:["🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra","🇭🇷 Croacia","🇬🇭 Ghana","🇵🇦 Panamá"],
+};
+
+const COLORS = [
+  {bg:"#1a3a8f",light:"#6080df",glow:"#3060ff"},
+  {bg:"#7b2d8b",light:"#c06dd0",glow:"#b040e0"},
+  {bg:"#9b1a1a",light:"#d06060",glow:"#ff3030"},
+  {bg:"#0b6e4f",light:"#3aae80",glow:"#00dd88"},
+  {bg:"#8a4a00",light:"#d08030",glow:"#ff9900"},
+  {bg:"#1a5f7a",light:"#4aaabb",glow:"#00ccff"},
+];
+
+const EMOJIS = ["🇦🇷","🇧🇷","🇫🇷","🇩🇪","🇪🇸","⚽"];
+
+// ── Estado global ──────────────────────────────────────────────────────────
+let participants = [];
+let myName = localStorage.getItem(LOCAL_KEY) || null;
+let phase = "idle"; // idle | spinning | revealing | done
+let revealedGroups = [];
+let flipTimers = [];
+
+// ── Firebase ───────────────────────────────────────────────────────────────
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+function getAvailable(list){
+  const taken=list.flatMap(p=>p.grupos||[]);
+  return GRUPOS.filter(g=>!taken.includes(g));
+}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+// ── Confetti ───────────────────────────────────────────────────────────────
+function launchConfetti(){
+  const canvas=document.getElementById("confetti-canvas");
+  canvas.style.display="block";
+  canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+  const ctx=canvas.getContext("2d");
+  const cols=["#c8a84b","#f0d080","#fff","#3aae80","#6080df","#ff9900","#c06dd0","#ff4444"];
+  const pts=Array.from({length:130},()=>({
+    x:Math.random()*canvas.width,y:-30-Math.random()*150,
+    vx:(Math.random()-0.5)*5,vy:3+Math.random()*5,
+    color:cols[Math.floor(Math.random()*cols.length)],
+    angle:Math.random()*Math.PI*2,spin:(Math.random()-0.5)*0.25,
+    w:8+Math.random()*14,h:5+Math.random()*9,
+    shape:Math.random()>0.4?"rect":"circle",r:4+Math.random()*5,
+  }));
+  let frame=0;
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pts.forEach(p=>{
+      p.y+=p.vy;p.x+=p.vx;p.vy+=0.06;p.angle+=p.spin;
+      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.angle);
+      ctx.globalAlpha=Math.max(0,1-frame/160);ctx.fillStyle=p.color;
+      if(p.shape==="circle"){ctx.beginPath();ctx.arc(0,0,p.r,0,Math.PI*2);ctx.fill();}
+      else ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+      ctx.restore();
+    });
+    frame++;
+    if(frame<180)requestAnimationFrame(draw);
+    else canvas.style.display="none";
+  }
+  requestAnimationFrame(draw);
+}
+
+// ── Render ─────────────────────────────────────────────────────────────────
+function render(){
+  const app = document.getElementById("app");
+  const isFull = participants.length >= MAX;
+  const allDone = isFull && participants.every(p=>p.grupos?.length===2);
+  const myP = myName ? participants.find(p=>p.name===myName) : null;
+  const myC = myP ? COLORS[myP.color] : null;
+
+  let html = `
+  <div class="header">
+    <span class="star" style="top:15%;left:4%;font-size:11px;animation:starFloat 2s ease-in-out infinite">★</span>
+    <span class="star" style="top:28%;left:22%;font-size:7px;animation:starFloat 2.4s ease-in-out infinite 0.35s">✦</span>
+    <span class="star" style="top:41%;left:40%;font-size:11px;animation:starFloat 2.8s ease-in-out infinite 0.7s">★</span>
+    <span class="star" style="top:54%;left:58%;font-size:7px;animation:starFloat 3.2s ease-in-out infinite 1.05s">✦</span>
+    <span class="star" style="top:67%;left:76%;font-size:11px;animation:starFloat 3.6s ease-in-out infinite 1.4s">★</span>
+    <div style="font-size:46px;margin-bottom:2px">🏆</div>
+    <h1>Copa del Mundo 2026</h1>
+    <p>Sorteo de grupos · EE.UU. · México · Canadá</p>
+    <div class="progress-wrap">
+      <div class="progress-label"><span>Participantes registrados</span><span style="font-weight:700;color:${isFull?'#2ecc71':'#c8a84b'}">${participants.length} / ${MAX}</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${(participants.length/MAX)*100}%"></div></div>
+    </div>
+  </div>
+  <div class="container">`;
+
+  // ── Registro ──
+  if(!myP && !isFull){
+    const isSpinning = phase==="spinning";
+    html += `<div class="bombo-wrap" style="animation:fadeUp 0.5s ease">
+      <div class="bombo">
+        <div class="bombo-ring ${isSpinning?'spinning':'idle'}"></div>
+        ${EMOJIS.map((f,i)=>`<div class="bombo-emoji ${isSpinning?'spinning':''}" style="transform:translate(-50%,-50%) rotate(${i*60}deg) translateY(-44px)">${f}</div>`).join('')}
+        <div class="bombo-center ${isSpinning?'spinning':''}">${isSpinning?'⚽':'🏆'}</div>
+      </div>
+    </div>`;
+    if(isSpinning){
+      html += `<div style="text-align:center;margin-bottom:24px">
+        <div class="spinning-text">⚙ Girando el bombo...</div>
+        <div class="spinning-sub">Seleccionando tus grupos al azar</div>
+      </div>`;
+    } else {
+      html += `<div class="card">
+        <h2>👤 Regístrate para participar</h2>
+        <p>Escribe tu nombre y pica el botón.<br>El bombo te asignará <b style="color:#c8a84b">2 grupos</b> al azar.
+        ${participants.length>0?`<br><span style="color:#f0d080">Quedan ${MAX-participants.length} lugar(es)</span>`:''}</p>
+        <div class="input-row">
+          <input id="name-input" type="text" placeholder="Tu nombre..." maxlength="25"/>
+          <button class="sortear-btn" id="sortear-btn">🎰 ¡Sortear!</button>
+        </div>
+        <div class="err" id="err-msg"></div>
+      </div>`;
+    }
+  }
+
+  // ── Lleno sin mi registro ──
+  if(!myP && isFull){
+    html += `<div class="locked-card"><div style="font-size:32px;margin-bottom:8px">🔒</div>
+      <div style="font-weight:800;color:#c8a84b;font-size:15px">El sorteo ya está completo</div>
+      <div style="font-size:12px;color:#5a7a9a;margin-top:6px">Los 6 lugares han sido ocupados.</div></div>`;
+  }
+
+  // ── Revelación ──
+  if(myP && (phase==="revealing"||phase==="done")){
+    html += `<div class="reveal-section">
+      <div class="reveal-label">${phase==="revealing"?"🎲 REVELANDO TUS GRUPOS...":"🎉 ¡GRUPOS ASIGNADOS!"}</div>
+      <div class="reveal-name">${myP.name}</div>
+      <div class="flip-cards-row">`;
+    myP.grupos.forEach((g,i)=>{
+      const c=COLORS[myP.color];
+      const isFlipped=revealedGroups.includes(g);
+      html+=`<div class="flip-card">
+        <div class="flip-card-inner ${isFlipped?'flipped':'hidden'}" id="flip-${g}">
+          <div class="flip-front" style="background:linear-gradient(145deg,${c.bg},${c.light}55);border:2.5px solid ${c.light};box-shadow:0 0 24px ${c.glow}66">
+            <div class="big-letter" style="text-shadow:0 0 20px ${c.glow}">${g}</div>
+            <div class="divider" style="background:${c.light}55"></div>
+            <div class="team-list">${EQUIPOS[g]?.map(e=>`<div>${e}</div>`).join('')}</div>
+          </div>
+          <div class="flip-back"><div class="q">?</div><div style="font-size:20px">⚽</div></div>
+        </div>
+      </div>`;
+    });
+    html+=`</div>`;
+    if(phase==="done") html+=`<div class="reveal-done">✅ ¡Listo! Tienes los Grupos ${myP.grupos.join(" y ")}</div>`;
+    html+=`</div>`;
+  }
+
+  // ── Mis grupos (vista permanente) ──
+  if(myP && phase==="idle"){
+    html+=`<div class="my-groups-card" style="background:linear-gradient(135deg,${myC.bg}44,#0c1e38);border:2px solid ${myC.light};box-shadow:0 0 20px ${myC.glow}33">
+      <div class="my-groups-label">✅ YA PARTICIPAS EN EL SORTEO</div>
+      <div class="my-groups-name">Hola, ${myP.name} 👋</div>
+      <div class="group-cards-row">`;
+    myP.grupos.forEach(g=>{
+      html+=`<div class="group-big-card" style="background:${myC.bg};border:2px solid ${myC.light};box-shadow:0 0 20px ${myC.glow}55">
+        <div class="letter">Grupo ${g}</div>
+        <div class="divider" style="background:${myC.light}55"></div>
+        <div class="teams">${EQUIPOS[g]?.map(e=>`<div>${e}</div>`).join('')}</div>
+      </div>`;
+    });
+    html+=`</div></div>`;
+  }
+
+  // ── Completo ──
+  if(allDone){
+    html+=`<div class="done-banner"><div class="trophy">🏆</div>
+      <div class="title">¡Sorteo Completado!</div>
+      <div class="sub">Los 6 participantes tienen sus grupos</div></div>`;
+  }
+
+  // ── Lista participantes ──
+  html+=`<div class="section-title">PARTICIPANTES (${participants.length}/${MAX})</div>
+  <div class="participants-list">`;
+  participants.forEach((p,i)=>{
+    const c=COLORS[p.color];
+    const isMe=p.name===myName;
+    html+=`<div class="participant-row" style="background:${c.bg}22;border:${isMe?2:1}px solid ${c.light};box-shadow:${isMe?`0 0 16px ${c.glow}44`:'none'}">
+      <div class="participant-avatar" style="background:${c.bg};border:2px solid ${c.light};box-shadow:0 0 8px ${c.glow}44">${i+1}</div>
+      <div class="participant-info">
+        <div class="participant-name">${p.name}${isMe?`<span style="font-size:10px;color:${c.light};margin-left:7px">(tú)</span>`:''}</div>
+        <div class="participant-sub">Grupos ${p.grupos?.join(" y ")||"—"}</div>
+      </div>
+      <div class="participant-tags">
+        ${(p.grupos||[]).map(g=>`<div class="group-tag" style="background:${c.bg};border:1px solid ${c.light};box-shadow:0 0 8px ${c.glow}33">${g}</div>`).join('')}
+      </div>
+    </div>`;
+  });
+  for(let i=0;i<MAX-participants.length;i++){
+    html+=`<div class="empty-row"><div class="empty-avatar">${participants.length+i+1}</div>
+      <div style="font-size:12px;color:#1a3060">Esperando participante...</div></div>`;
+  }
+  html+=`</div>`;
+
+  // ── Tabla grupos ──
+  if(participants.length>0){
+    html+=`<div class="section-title">GRUPOS ASIGNADOS</div><div class="groups-grid">`;
+    GRUPOS.forEach(g=>{
+      const owner=participants.find(p=>p.grupos?.includes(g));
+      const c=owner?COLORS[owner.color]:null;
+      const ismine=myP?.grupos?.includes(g);
+      html+=`<div class="group-cell" style="background:${c?c.bg+'22':'#0c1e38'};border:${ismine?2:1}px solid ${c?c.light:'#1a3460'};box-shadow:${ismine?`0 0 14px ${c?.glow}44`:'none'}">
+        <div class="group-cell-header" style="background:${c?c.bg:'#0d2b5e'}">
+          <span class="gletter">GRUPO ${g}</span>
+          <span class="gowner">${owner?.name||'—'}</span>
+        </div>
+        <div class="group-cell-body">
+          ${EQUIPOS[g]?.map(eq=>`<div class="group-cell-team">${eq}</div>`).join('')}
+        </div>
+      </div>`;
+    });
+    html+=`</div>`;
+  }
+
+  html+=`<button class="reset-btn" id="reset-btn">🔄 Reiniciar sorteo (admin)</button>`;
+  html+=`</div>`; // container
+
+  app.innerHTML = html;
+  attachEvents();
+}
+
+function attachEvents(){
+  const inp = document.getElementById("name-input");
+  const btn = document.getElementById("sortear-btn");
+  const rst = document.getElementById("reset-btn");
+
+  if(inp) inp.addEventListener("keydown", e=>{ if(e.key==="Enter") doSortear(); });
+  if(btn) btn.addEventListener("click", doSortear);
+  if(rst) rst.addEventListener("click", doReset);
+}
+
+async function doSortear(){
+  const inp = document.getElementById("name-input");
+  const err = document.getElementById("err-msg");
+  const n = inp?.value.trim();
+  if(!n){ if(err) err.textContent="Escribe tu nombre primero"; return; }
+  if(n.length>25){ if(err) err.textContent="Máximo 25 caracteres"; return; }
+
+  phase="spinning";
+  render();
+  await sleep(2400);
+
+  const snap = await get(ref(db, DB_PATH));
+  const fresh = snap.val();
+  const freshList = fresh?.participants||[];
+
+  if(freshList.length>=MAX){ phase="idle"; showErr("El sorteo ya está lleno."); return; }
+  if(freshList.some(p=>p.name.toLowerCase()===n.toLowerCase())){ phase="idle"; showErr("Ese nombre ya está registrado."); return; }
+
+  const avail = getAvailable(freshList);
+  if(avail.length<2){ phase="idle"; showErr("No hay grupos disponibles."); return; }
+
+  const picked = shuffle(avail).slice(0,2).sort();
+  const newP = {name:n, grupos:picked, color:freshList.length, ts:Date.now()};
+  await set(ref(db,DB_PATH), {participants:[...freshList,newP]});
+
+  localStorage.setItem(LOCAL_KEY, n);
+  myName = n;
+
+  phase="revealing";
+  revealedGroups=[];
+  render();
+
+  await sleep(600);
+  revealedGroups=[picked[0]];
+  flipCard(picked[0]);
+  await sleep(1000);
+  revealedGroups=[picked[0],picked[1]];
+  flipCard(picked[1]);
+  await sleep(800);
+
+  launchConfetti();
+  phase="done";
+  render();
+  setTimeout(()=>{ phase="idle"; render(); }, 4000);
+}
+
+function flipCard(g){
+  const el = document.getElementById(`flip-${g}`);
+  if(el){ el.classList.remove("hidden"); el.classList.add("flipped"); }
+}
+
+function showErr(msg){
+  render();
+  const err = document.getElementById("err-msg");
+  if(err) err.textContent = msg;
+}
+
+async function doReset(){
+  if(!confirm("¿Reiniciar el sorteo? Se borrarán todos los registros.")) return;
+  await set(ref(db,DB_PATH),{participants:[]});
+  localStorage.removeItem(LOCAL_KEY);
+  myName=null; phase="idle"; revealedGroups=[];
+}
+
+// ── Escuchar Firebase en tiempo real ──────────────────────────────────────
+onValue(ref(db,DB_PATH),(snapshot)=>{
+  participants = snapshot.val()?.participants||[];
+  document.getElementById("loading").style.display="none";
+  document.getElementById("app").style.display="block";
+  if(phase==="idle") render();
+},(error)=>{
+  console.error(error);
+  document.getElementById("loading").innerHTML=`<div style="text-align:center;padding:24px;font-family:sans-serif">
+    <div style="font-size:44px">⚠️</div>
+    <div style="color:#e74c3c;font-size:16px;font-weight:800;margin-top:12px">Error de conexión</div>
+    <div style="color:#aaa;font-size:12px;margin-top:8px">Revisa tu conexión a internet e intenta de nuevo.</div>
+  </div>`;
+});
+
+</script>
+
+
+</body></html>
