@@ -1,8 +1,6 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<html lang="es"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sorteo Copa del Mundo 2026</title>
   <style>
     *{box-sizing:border-box;margin:0;padding:0;}
@@ -122,8 +120,181 @@
 <body>
 
 <canvas id="confetti-canvas" style="display:none"></canvas>
-<div id="loading"><div class="ball">⚽</div><p>CARGANDO...</p></div>
-<div id="app" style="display:none"></div>
+<div id="loading" style="display: none;"><div class="ball">⚽</div><p>CARGANDO...</p></div>
+<div id="app" style="display: block;">
+  <div class="header">
+    <span class="star" style="top:15%;left:4%;font-size:11px;animation:starFloat 2s ease-in-out infinite">★</span>
+    <span class="star" style="top:28%;left:22%;font-size:7px;animation:starFloat 2.4s ease-in-out infinite 0.35s">✦</span>
+    <span class="star" style="top:41%;left:40%;font-size:11px;animation:starFloat 2.8s ease-in-out infinite 0.7s">★</span>
+    <span class="star" style="top:54%;left:58%;font-size:7px;animation:starFloat 3.2s ease-in-out infinite 1.05s">✦</span>
+    <span class="star" style="top:67%;left:76%;font-size:11px;animation:starFloat 3.6s ease-in-out infinite 1.4s">★</span>
+    <div style="font-size:46px;margin-bottom:2px">🏆</div>
+    <h1>Copa del Mundo 2026</h1>
+    <p>Sorteo de grupos · EE.UU. · México · Canadá</p>
+    <div class="progress-wrap">
+      <div class="progress-label"><span>Participantes registrados</span><span style="font-weight:700;color:#c8a84b">5 / 6</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:83.33333333333334%"></div></div>
+    </div>
+  </div>
+  <div class="container"><div class="bombo-wrap" style="animation:fadeUp 0.5s ease">
+      <div class="bombo">
+        <div class="bombo-ring idle"></div>
+        <div class="bombo-emoji " style="transform:translate(-50%,-50%) rotate(0deg) translateY(-44px)">🇦🇷</div><div class="bombo-emoji " style="transform:translate(-50%,-50%) rotate(60deg) translateY(-44px)">🇧🇷</div><div class="bombo-emoji " style="transform:translate(-50%,-50%) rotate(120deg) translateY(-44px)">🇫🇷</div><div class="bombo-emoji " style="transform:translate(-50%,-50%) rotate(180deg) translateY(-44px)">🇩🇪</div><div class="bombo-emoji " style="transform:translate(-50%,-50%) rotate(240deg) translateY(-44px)">🇪🇸</div><div class="bombo-emoji " style="transform:translate(-50%,-50%) rotate(300deg) translateY(-44px)">⚽</div>
+        <div class="bombo-center ">🏆</div>
+      </div>
+    </div><div class="card">
+        <h2>👤 Regístrate para participar</h2>
+        <p>Escribe tu nombre y pica el botón.<br>El bombo te asignará <b style="color:#c8a84b">2 grupos</b> al azar.
+        <br><span style="color:#f0d080">Quedan 1 lugar(es)</span></p>
+        <div class="input-row">
+          <input id="name-input" type="text" placeholder="Tu nombre..." maxlength="25" data-manus_clickable="true" data-manus_click_id="1">
+          <button class="sortear-btn" id="sortear-btn" data-manus_clickable="true" data-manus_click_id="2">🎰 ¡Sortear!</button>
+        </div>
+        <div class="err" id="err-msg"></div>
+      </div><div class="section-title">PARTICIPANTES (5/6)</div>
+  <div class="participants-list"><div class="participant-row" style="background:#1a3a8f22;border:1px solid #6080df;box-shadow:none">
+      <div class="participant-avatar" style="background:#1a3a8f;border:2px solid #6080df;box-shadow:0 0 8px #3060ff44">1</div>
+      <div class="participant-info">
+        <div class="participant-name">Jonatan</div>
+        <div class="participant-sub">Grupos A y C</div>
+      </div>
+      <div class="participant-tags">
+        <div class="group-tag" style="background:#1a3a8f;border:1px solid #6080df;box-shadow:0 0 8px #3060ff33">A</div><div class="group-tag" style="background:#1a3a8f;border:1px solid #6080df;box-shadow:0 0 8px #3060ff33">C</div>
+      </div>
+    </div><div class="participant-row" style="background:#7b2d8b22;border:1px solid #c06dd0;box-shadow:none">
+      <div class="participant-avatar" style="background:#7b2d8b;border:2px solid #c06dd0;box-shadow:0 0 8px #b040e044">2</div>
+      <div class="participant-info">
+        <div class="participant-name">Rosalía</div>
+        <div class="participant-sub">Grupos G y H</div>
+      </div>
+      <div class="participant-tags">
+        <div class="group-tag" style="background:#7b2d8b;border:1px solid #c06dd0;box-shadow:0 0 8px #b040e033">G</div><div class="group-tag" style="background:#7b2d8b;border:1px solid #c06dd0;box-shadow:0 0 8px #b040e033">H</div>
+      </div>
+    </div><div class="participant-row" style="background:#9b1a1a22;border:1px solid #d06060;box-shadow:none">
+      <div class="participant-avatar" style="background:#9b1a1a;border:2px solid #d06060;box-shadow:0 0 8px #ff303044">3</div>
+      <div class="participant-info">
+        <div class="participant-name">EVA Y.</div>
+        <div class="participant-sub">Grupos B y F</div>
+      </div>
+      <div class="participant-tags">
+        <div class="group-tag" style="background:#9b1a1a;border:1px solid #d06060;box-shadow:0 0 8px #ff303033">B</div><div class="group-tag" style="background:#9b1a1a;border:1px solid #d06060;box-shadow:0 0 8px #ff303033">F</div>
+      </div>
+    </div><div class="participant-row" style="background:#0b6e4f22;border:1px solid #3aae80;box-shadow:none">
+      <div class="participant-avatar" style="background:#0b6e4f;border:2px solid #3aae80;box-shadow:0 0 8px #00dd8844">4</div>
+      <div class="participant-info">
+        <div class="participant-name">Ambrosio</div>
+        <div class="participant-sub">Grupos D y K</div>
+      </div>
+      <div class="participant-tags">
+        <div class="group-tag" style="background:#0b6e4f;border:1px solid #3aae80;box-shadow:0 0 8px #00dd8833">D</div><div class="group-tag" style="background:#0b6e4f;border:1px solid #3aae80;box-shadow:0 0 8px #00dd8833">K</div>
+      </div>
+    </div><div class="participant-row" style="background:#8a4a0022;border:1px solid #d08030;box-shadow:none">
+      <div class="participant-avatar" style="background:#8a4a00;border:2px solid #d08030;box-shadow:0 0 8px #ff990044">5</div>
+      <div class="participant-info">
+        <div class="participant-name">Christopher</div>
+        <div class="participant-sub">Grupos I y L</div>
+      </div>
+      <div class="participant-tags">
+        <div class="group-tag" style="background:#8a4a00;border:1px solid #d08030;box-shadow:0 0 8px #ff990033">I</div><div class="group-tag" style="background:#8a4a00;border:1px solid #d08030;box-shadow:0 0 8px #ff990033">L</div>
+      </div>
+    </div><div class="empty-row"><div class="empty-avatar">6</div>
+      <div style="font-size:12px;color:#1a3060">Esperando participante...</div></div></div><div class="section-title">GRUPOS ASIGNADOS</div><div class="groups-grid"><div class="group-cell" style="background:#1a3a8f22;border:1px solid #6080df;box-shadow:none">
+        <div class="group-cell-header" style="background:#1a3a8f">
+          <span class="gletter">GRUPO A</span>
+          <span class="gowner">Jonatan</span>
+        </div>
+        <div class="group-cell-body">
+          <div class="group-cell-team">🇲🇽 México</div><div class="group-cell-team">🇿🇦 Sudáfrica</div><div class="group-cell-team">🇩🇪 Alemania</div><div class="group-cell-team">🇨🇮 Costa de Marfil</div>
+        </div>
+      </div><div class="group-cell" style="background:#9b1a1a22;border:1px solid #d06060;box-shadow:none">
+        <div class="group-cell-header" style="background:#9b1a1a">
+          <span class="gletter">GRUPO B</span>
+          <span class="gowner">EVA Y.</span>
+        </div>
+        <div class="group-cell-body">
+          <div class="group-cell-team">🇺🇸 Estados Unidos</div><div class="group-cell-team">🇸🇳 Senegal</div><div class="group-cell-team">🇺🇾 Uruguay</div><div class="group-cell-team">🇨🇼 Curazao</div>
+        </div>
+      </div><div class="group-cell" style="background:#1a3a8f22;border:1px solid #6080df;box-shadow:none">
+        <div class="group-cell-header" style="background:#1a3a8f">
+          <span class="gletter">GRUPO C</span>
+          <span class="gowner">Jonatan</span>
+        </div>
+        <div class="group-cell-body">
+          <div class="group-cell-team">🇨🇦 Canadá</div><div class="group-cell-team">🇭🇷 Croacia</div><div class="group-cell-team">🇲🇦 Marruecos</div><div class="group-cell-team">🇧🇪 Bélgica</div>
+        </div>
+      </div><div class="group-cell" style="background:#0b6e4f22;border:1px solid #3aae80;box-shadow:none">
+        <div class="group-cell-header" style="background:#0b6e4f">
+          <span class="gletter">GRUPO D</span>
+          <span class="gowner">Ambrosio</span>
+        </div>
+        <div class="group-cell-body">
+          <div class="group-cell-team">🇦🇷 Argentina</div><div class="group-cell-team">🇵🇹 Portugal</div><div class="group-cell-team">🇳🇬 Nigeria</div><div class="group-cell-team">🇺🇿 Uzbekistán</div>
+        </div>
+      </div><div class="group-cell" style="background:#0c1e38;border:1px solid #1a3460;box-shadow:none">
+        <div class="group-cell-header" style="background:#0d2b5e">
+          <span class="gletter">GRUPO E</span>
+          <span class="gowner">—</span>
+        </div>
+        <div class="group-cell-body">
+          <div class="group-cell-team">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra</div><div class="group-cell-team">🇨🇴 Colombia</div><div class="group-cell-team">🇪🇬 Egipto</div><div class="group-cell-team">🇯🇴 Jordania</div>
+        </div>
+      </div><div class="group-cell" style="background:#9b1a1a22;border:1px solid #d06060;box-shadow:none">
+        <div class="group-cell-header" style="background:#9b1a1a">
+          <span class="gletter">GRUPO F</span>
+          <span class="gowner">EVA Y.</span>
+        </div>
+        <div class="group-cell-body">
+          <div class="group-cell-team">🇧🇷 Brasil</div><div class="group-cell-team">🇨🇭 Suiza</div><div class="group-cell-team">🇯🇵 Japón</div><div class="group-cell-team">🇹🇳 Túnez</div>
+        </div>
+      </div><div class="group-cell" style="background:#7b2d8b22;border:1px solid #c06dd0;box-shadow:none">
+        <div class="group-cell-header" style="background:#7b2d8b">
+          <span class="gletter">GRUPO G</span>
+          <span class="gowner">Rosalía</span>
+        </div>
+        <div class="group-cell-body">
+          <div class="group-cell-team">🇫🇷 Francia</div><div class="group-cell-team">🇳🇱 Países Bajos</div><div class="group-cell-team">🇪🇨 Ecuador</div><div class="group-cell-team">🇮🇶 Irak</div>
+        </div>
+      </div><div class="group-cell" style="background:#7b2d8b22;border:1px solid #c06dd0;box-shadow:none">
+        <div class="group-cell-header" style="background:#7b2d8b">
+          <span class="gletter">GRUPO H</span>
+          <span class="gowner">Rosalía</span>
+        </div>
+        <div class="group-cell-body">
+          <div class="group-cell-team">🇪🇸 España</div><div class="group-cell-team">🇰🇷 Corea del Sur</div><div class="group-cell-team">🇵🇾 Paraguay</div><div class="group-cell-team">🇩🇿 Argelia</div>
+        </div>
+      </div><div class="group-cell" style="background:#8a4a0022;border:1px solid #d08030;box-shadow:none">
+        <div class="group-cell-header" style="background:#8a4a00">
+          <span class="gletter">GRUPO I</span>
+          <span class="gowner">Christopher</span>
+        </div>
+        <div class="group-cell-body">
+          <div class="group-cell-team">🇸🇪 Suecia</div><div class="group-cell-team">🇹🇷 Turquía</div><div class="group-cell-team">🇬🇭 Ghana</div><div class="group-cell-team">🇵🇦 Panamá</div>
+        </div>
+      </div><div class="group-cell" style="background:#0c1e38;border:1px solid #1a3460;box-shadow:none">
+        <div class="group-cell-header" style="background:#0d2b5e">
+          <span class="gletter">GRUPO J</span>
+          <span class="gowner">—</span>
+        </div>
+        <div class="group-cell-body">
+          <div class="group-cell-team">🇦🇹 Austria</div><div class="group-cell-team">🇦🇺 Australia</div><div class="group-cell-team">🇨🇻 Cabo Verde</div><div class="group-cell-team">🇶🇦 Catar</div>
+        </div>
+      </div><div class="group-cell" style="background:#0b6e4f22;border:1px solid #3aae80;box-shadow:none">
+        <div class="group-cell-header" style="background:#0b6e4f">
+          <span class="gletter">GRUPO K</span>
+          <span class="gowner">Ambrosio</span>
+        </div>
+        <div class="group-cell-body">
+          <div class="group-cell-team">🇳🇴 Noruega</div><div class="group-cell-team">🇮🇷 Irán</div><div class="group-cell-team">🇨🇩 RD del Congo</div><div class="group-cell-team">🇭🇹 Haití</div>
+        </div>
+      </div><div class="group-cell" style="background:#8a4a0022;border:1px solid #d08030;box-shadow:none">
+        <div class="group-cell-header" style="background:#8a4a00">
+          <span class="gletter">GRUPO L</span>
+          <span class="gowner">Christopher</span>
+        </div>
+        <div class="group-cell-body">
+          <div class="group-cell-team">🏴󠁧󠁢󠁳󠁣󠁴󠁿 Escocia</div><div class="group-cell-team">🇸🇦 Arabia Saudita</div><div class="group-cell-team">🇷🇸 Serbia</div><div class="group-cell-team">🇳🇿 Nueva Zelanda</div>
+        </div>
+      </div></div><button class="reset-btn" id="reset-btn" data-manus_clickable="true" data-manus_click_id="3">🔄 Reiniciar sorteo (admin)</button></div></div>
 
 <!-- Firebase -->
 <script type="module">
@@ -148,18 +319,18 @@ const DB_PATH = "mundial2026";
 const LOCAL_KEY = "mundial2026-myname";
 
 const EQUIPOS = {
-  A:["🇲🇽 México","🇿🇦 Sudáfrica","🇩🇪 Alemania","🇨🇮 Costa de Marfil"],
-  B:["🇺🇸 Estados Unidos","🇸🇳 Senegal","🇺🇾 Uruguay","🇨🇼 Curazao"],
-  C:["🇨🇦 Canadá","🇭🇷 Croacia","🇲🇦 Marruecos","🇧🇪 Bélgica"],
-  D:["🇦🇷 Argentina","🇵🇹 Portugal","🇳🇬 Nigeria","🇺🇿 Uzbekistán"],
-  E:["🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra","🇨🇴 Colombia","🇪🇬 Egipto","🇯🇴 Jordania"],
-  F:["🇧🇷 Brasil","🇨🇭 Suiza","🇯🇵 Japón","🇹🇳 Túnez"],
-  G:["🇫🇷 Francia","🇳🇱 Países Bajos","🇪🇨 Ecuador","🇮🇶 Irak"],
-  H:["🇪🇸 España","🇰🇷 Corea del Sur","🇵🇾 Paraguay","🇩🇿 Argelia"],
-  I:["🇸🇪 Suecia","🇹🇷 Turquía","🇬🇭 Ghana","🇵🇦 Panamá"],
-  J:["🇦🇹 Austria","🇦🇺 Australia","🇨🇻 Cabo Verde","🇶🇦 Catar"],
-  K:["🇳🇴 Noruega","🇮🇷 Irán","🇨🇩 RD del Congo","🇭🇹 Haití"],
-  L:["🏴󠁧󠁢󠁳󠁣󠁴󠁿 Escocia","🇸🇦 Arabia Saudita","🇷🇸 Serbia","🇳🇿 Nueva Zelanda"],
+  A:["🇲🇽 México","🇿🇦 Sudáfrica","🇰🇷 Corea","🇨🇿 Cheguía"],
+  B:["🇨🇦 Canadá","🇧🇦 Bosnia","🇶🇦 Qatar","🇨🇭 Suiza"],
+  C:["🇧🇷 Brasil","🇲🇦 Marruecos","🇭🇹 Haití","🏴󠁧󠁢󠁳󠁣󠁴󠁿 Escocia"],
+  D:["🇺🇸 EE.UU.","🇵🇾 Paraguay","🇦🇺 Australia","🇹🇷 Turquía"],
+  E:["🇩🇪 Alemania","🇨🇼 Curazao","🇨🇮 C. de Marfil","🇪🇨 Ecuador"],
+  F:["🇳🇱 Países Bajos","🇯🇵 Japón","🇸🇪 Suecia","🇹🇳 Túnez"],
+  G:["🇧🇪 Bélgica","🇪🇬 Egipto","🇮🇷 Irán","🇳🇿 Nueva Zelanda"],
+  H:["🇪🇸 España","🇨🇻 Cabo Verde","🇸🇦 Arabia Saudita","🇺🇾 Uruguay"],
+  I:["🇫🇷 Francia","🇸🇳 Senegal","🇮🇶 Irak","🇳🇴 Noruega"],
+  J:["🇦🇷 Argentina","🇩🇿 Argelia","🇺🇿 Uzbekistán","🇯🇴 Jordania"],
+  K:["🇵🇹 Portugal","🇨🇩 RD Congo","🇺🇿 Uzbekistán","🇨🇴 Colombia"],
+  L:["🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra","🇭🇷 Croacia","🇬🇭 Ghana","🇵🇦 Panamá"],
 };
 
 const COLORS = [
@@ -477,5 +648,6 @@ onValue(ref(db,DB_PATH),(snapshot)=>{
 });
 
 </script>
-</body>
-</html>
+
+
+</body></html>
